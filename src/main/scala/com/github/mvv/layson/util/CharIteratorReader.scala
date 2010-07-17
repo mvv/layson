@@ -35,10 +35,14 @@ class CharIteratorReader private() extends Reader {
   override def read(): Int = {
     if (closed)
       throw new IOException
-    if (it == null || !it.hasNext)
+    if (it == null)
       -1
-    else
+    else if (it.hasNext)
       it.next
+    else {
+      it = null
+      -1
+    }
   }
 
   override def read(buf: Array[Char]): Int = read(buf, 0, buf.size)
