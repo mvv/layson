@@ -198,6 +198,10 @@ final case class BsonId(time: Int, machine: Int, increment: Int)
   def serialize = BsonInt(time).serialize ++
                   BsonInt(machine).serialize ++
                   BsonInt(increment).serialize
+  override def toString =
+    "%08x%08x%08x" format (java.lang.Integer.reverseBytes(time),
+                           java.lang.Integer.reverseBytes(machine),
+                           java.lang.Integer.reverseBytes(increment))
 }
 object BsonId {
   val Zero = BsonId(0, 0, 0)
