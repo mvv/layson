@@ -199,7 +199,7 @@ final case class BsonId(time: Int, machine: Int, increment: Int)
                   BsonInt(machine).serialize ++
                   BsonInt(increment).serialize
   override def toString =
-    "%08x%08x%08x" format (java.lang.Integer.reverseBytes(time),
+    "%08x%08x%08x" format (time,
                            java.lang.Integer.reverseBytes(machine),
                            java.lang.Integer.reverseBytes(increment))
 }
