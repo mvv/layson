@@ -73,9 +73,11 @@ final class JsonNum(val value: BigDecimal) extends OptJsonNum
       BsonDouble(value.doubleValue)
 }
 object JsonNum {
-  def apply(value: BigDecimal) = new JsonNum(value)
-  def apply(value: BigInt) = new JsonNum(BigDecimal(value))
+  def apply(value: Int) = new JsonNum(BigDecimal(value))
+  def apply(value: Long) = new JsonNum(BigDecimal(value))
   def apply(value: Double) = new JsonNum(BigDecimal(value.toString))
+  def apply(value: BigInt) = new JsonNum(BigDecimal(value))
+  def apply(value: BigDecimal) = new JsonNum(value)
   def unapply(x: JsonNum): Option[BigDecimal] = Some(x.value)
 }
 
