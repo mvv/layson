@@ -215,6 +215,14 @@ object JsonValue {
   implicit def booleanToJsonBool(x: Boolean) = JsonBool(x)
   implicit def booleanToOptJsonBool(x: java.lang.Boolean) =
     if (x == null) JsonNull else JsonBool(x.booleanValue)
+  implicit def intToJsonNum(x: Int) = JsonNum(x)
+  implicit def longToJsonNum(x: Long) = JsonNum(x)
+  implicit def floatToJsonNum(x: Float) = JsonNum(x)
+  implicit def doubleToJsonNum(x: Double) = JsonNum(x)
+  implicit def bigIntToOptJsonNum(x: BigInt) =
+    if (x == null) JsonNull else JsonNum(x)
+  implicit def bigDecToOptJsonNum(x: BigDecimal) =
+    if (x == null) JsonNull else JsonNum(x)
   implicit def stringToOptJsonStr(x: String) =
     if (x == null) JsonNull else JsonStr(x)
   implicit def nullToJsonNull(x: Null) = JsonNull
