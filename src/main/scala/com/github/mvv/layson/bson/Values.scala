@@ -206,6 +206,20 @@ final case class BsonId(time: Int, machine: Int, increment: Int)
 object BsonId {
   val Zero = BsonId(0, 0, 0)
 }
+object BsonIdStr {
+  def unapply(str: String): Option[BsonId] =
+    if (str.length == 24 && str.forall(c => (c >= '0' && c <= '9') ||
+                                            (c >= 'a' && c <= 'f') ||
+                                            (c >= 'A' && c <= 'F'))) {
+      val time = java.lang.Long.parseLong(str.substring(0, 8), 16).intValue
+      val machine = java.lang.Integer.reverseBytes(
+        java.lang.Long.parseLong(str.substring(8, 16), 16).intValue)
+      val increment = java.lang.Integer.reverseBytes(
+        java.lang.Long.parseLong(str.substring(16, 24), 16).intValue)
+      Some(new BsonId(time, machine, increment))
+    } else
+      None
+}
 
 sealed trait OptBsonStr extends OptSimpleBsonValue
 object OptBsonStr {
