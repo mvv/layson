@@ -199,7 +199,7 @@ final case class BsonId(time: Int, machine: Int, increment: Int)
                   BsonInt(machine).serialize ++
                   BsonInt(increment).serialize
   override def toString =
-    "%08x%08x%08x" format (time,
+    "%08x%08x%08x" format (java.lang.Integer.reverseBytes(time),
                            java.lang.Integer.reverseBytes(machine),
                            java.lang.Integer.reverseBytes(increment))
 }
@@ -211,7 +211,8 @@ object BsonIdStr {
     if (str.length == 24 && str.forall(c => (c >= '0' && c <= '9') ||
                                             (c >= 'a' && c <= 'f') ||
                                             (c >= 'A' && c <= 'F'))) {
-      val time = java.lang.Long.parseLong(str.substring(0, 8), 16).intValue
+      val time = java.lang.Integer.reverseBytes(
+        java.lang.Long.parseLong(str.substring(0, 8), 16).intValue)
       val machine = java.lang.Integer.reverseBytes(
         java.lang.Long.parseLong(str.substring(8, 16), 16).intValue)
       val increment = java.lang.Integer.reverseBytes(
