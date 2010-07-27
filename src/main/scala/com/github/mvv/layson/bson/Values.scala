@@ -278,7 +278,7 @@ class LazyBsonArray(it: Iterator[BsonValue]) extends BsonArray {
 object BsonArray {
   val Empty = BsonArray()
 
-  def apply(elem: BsonValue*) = new StrictBsonArray(elem)
+  def apply(elems: BsonValue*) = new StrictBsonArray(elems)
   def apply(it: Iterator[BsonValue]) = new LazyBsonArray(it)
   def unapply(x: BsonArray): Option[Seq[BsonValue]] = Some(x.elements)
 }

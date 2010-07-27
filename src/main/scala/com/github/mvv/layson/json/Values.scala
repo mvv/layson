@@ -148,7 +148,7 @@ class LazyJsonArray(it: Iterator[JsonValue]) extends JsonArray {
   def iterator = elements.iterator
 }
 object JsonArray {
-  def apply(elem: JsonValue*) = new StrictJsonArray(elem)
+  def apply(elems: JsonValue*) = new StrictJsonArray(elems)
   def apply(it: Iterator[JsonValue]) = new LazyJsonArray(it)
   def unapply(x: JsonArray): Option[Seq[JsonValue]] = Some(x.elements)
 }
