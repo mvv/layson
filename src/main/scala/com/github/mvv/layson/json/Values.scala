@@ -191,7 +191,7 @@ class LazyJsonObject(it: Iterator[(String, JsonValue)]) extends JsonObject {
   override def get(key: String) = mems.find(_._1 == key).map(_._2)
 }
 object JsonObject {
-  def apply() = new SeqJsonObject(Seq.empty)
+  def apply() = new SeqJsonObject()
   def apply[T <% JsonValue](
         member: (String, T), members: (String, JsonValue)*) =
     new SeqJsonObject(
