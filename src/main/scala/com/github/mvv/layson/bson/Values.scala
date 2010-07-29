@@ -314,9 +314,10 @@ class LazyBsonObject(it: Iterator[(String, BsonValue)]) extends BsonObject {
 object BsonObject {
   val Empty = BsonObject()
 
-  def apply(members: (String, BsonValue)*) = new SeqBsonObject(members)
+  def apply() = new SeqBsonObject()
   def apply[T](m: (String, T))(implicit conv: T => BsonValue) =
     new SeqBsonObject(Seq(m._1 -> conv(m._2)))
+  def apply(members: Seq[(String, BsonValue)]) = new SeqBsonObject(members)
   def apply(map: Map[String, BsonValue]) = new MapBsonObject(map)
   def apply(it: Iterator[(String, BsonValue)]) = new LazyBsonObject(it)
   def unapply(x: BsonObject): Option[Map[String, BsonValue]] =
