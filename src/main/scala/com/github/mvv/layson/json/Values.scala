@@ -172,11 +172,13 @@ trait JsonObject extends OptJsonObject with CompoundJsonValue {
   def toBson: BsonObject = new JsonBsonObject(this)
 }
 class SeqJsonObject(val members: Seq[(String, JsonValue)]) extends JsonObject {
+  def this() = this(Vector())
   def iterator = members.iterator
   def membersMap = members.toMap
   def get(key: String) = members.find(_._1 == key).map(_._2)
 }
 class MapJsonObject(val membersMap: Map[String, JsonValue]) extends JsonObject {
+  def this() = this(Map())
   def iterator = membersMap.iterator
   def members = membersMap.toSeq
   def get(key: String) = membersMap.get(key)

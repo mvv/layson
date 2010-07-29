@@ -294,11 +294,13 @@ trait BsonObject extends OptBsonObject with CompoundBsonValue {
   final def serialize = Iterator.empty
 }
 class SeqBsonObject(val members: Seq[(String, BsonValue)]) extends BsonObject {
+  def this() = this(Vector())
   def iterator = members.iterator
   def membersMap = members.toMap
   def get(key: String) = members.find(_._1 == key).map(_._2)
 }
 class MapBsonObject(val membersMap: Map[String, BsonValue]) extends BsonObject {
+  def this() = this(Map())
   def iterator = membersMap.iterator
   def members = membersMap.toSeq
   def get(key: String) = membersMap.get(key)
