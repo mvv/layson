@@ -60,7 +60,9 @@ object BsonBool {
   implicit def bsonBoolToBoolean(x: BsonBool) = x.value
 }
 
-sealed trait OptNumericBsonValue extends OptSimpleBsonValue
+sealed trait OptNumericBsonValue extends OptSimpleBsonValue {
+  def unary_-(): this.type
+}
 sealed trait NumericBsonValue extends OptNumericBsonValue
                                  with SimpleBsonValue
 
@@ -103,6 +105,7 @@ final case class BsonInt(value: Int) extends OptBsonInt
                            ((value >> 8) & 0xFF).byteValue,
                            ((value >> 16) & 0xFF).byteValue,
                            ((value >> 24) & 0xFF).byteValue)
+  final def unary_-() = BsonInt(-value).asInstanceOf[this.type]
 }
 object BsonInt {
   val Zero = BsonInt(0)
@@ -165,6 +168,7 @@ final case class BsonLong(value: Long) extends OptBsonLong
                            ((value >> 40) & 0xFF).byteValue,
                            ((value >> 48) & 0xFF).byteValue,
                            ((value >> 56) & 0xFF).byteValue)
+  def unary_-() = BsonLong(-value).asInstanceOf[this.type]
 }
 object BsonLong {
   val Zero = BsonLong(0)
@@ -203,6 +207,7 @@ final case class BsonDouble(value: Double) extends OptBsonDouble
   def size = 8
   def serialize =
     BsonLong(java.lang.Double.doubleToRawLongBits(value)).serialize
+  def unary_-() = BsonDouble(-value).asInstanceOf[this.type]
 }
 object BsonDouble {
   val Zero = BsonDouble(0.0)
@@ -384,6 +389,7 @@ object BsonNull extends OptBsonValue
   def code = 0x0A
   def size = 0
   def serialize = Iterator.empty
+  def unary_-() = BsonNull
 }
 
 object BsonMinKey extends BsonValue {
