@@ -35,6 +35,10 @@ object OptBsonBool {
     case BsonNull => null
     case BsonBool(x) => java.lang.Boolean.valueOf(x)
   }
+  implicit def optBsonBoolToOption(x: OptBsonBool) = x match {
+    case BsonNull => None
+    case BsonBool(x) => Some(x)
+  }
 }
 sealed trait BsonBool extends OptBsonBool with SimpleBsonValue {
   val value: Boolean
@@ -78,6 +82,18 @@ object OptBsonInt {
     case BsonNull => null
     case BsonInt(x) => java.lang.Integer.valueOf(x)
   }
+  implicit def optBsonIntToByteOption(x: OptBsonInt) = x match {
+    case BsonNull => None
+    case BsonInt(x) => Some(x.byteValue)
+  }
+  implicit def optBsonIntToShortOption(x: OptBsonInt) = x match {
+    case BsonNull => None
+    case BsonInt(x) => Some(x.shortValue)
+  }
+  implicit def optBsonIntToIntOption(x: OptBsonInt) = x match {
+    case BsonNull => None
+    case BsonInt(x) => Some(x)
+  }
 }
 final case class BsonInt(value: Int) extends OptBsonInt
                                         with IntegralBsonValue {
@@ -120,6 +136,22 @@ object OptBsonLong {
     case BsonNull => null
     case BsonLong(x) => java.lang.Long.valueOf(x)
   }
+  implicit def optBsonLongToByteOption(x: OptBsonLong) = x match {
+    case BsonNull => None
+    case BsonLong(x) => Some(x.byteValue)
+  }
+  implicit def optBsonLongToShortOption(x: OptBsonLong) = x match {
+    case BsonNull => None
+    case BsonLong(x) => Some(x.shortValue)
+  }
+  implicit def optBsonLongToIntOption(x: OptBsonLong) = x match {
+    case BsonNull => None
+    case BsonLong(x) => Some(x.intValue)
+  }
+  implicit def optBsonLongToLongOption(x: OptBsonLong) = x match {
+    case BsonNull => None
+    case BsonLong(x) => Some(x)
+  }
 }
 final case class BsonLong(value: Long) extends OptBsonLong
                                           with IntegralBsonValue {
@@ -156,6 +188,14 @@ object OptBsonDouble {
     case BsonNull => null
     case BsonDouble(x) => java.lang.Double.valueOf(x)
   }
+  implicit def optBsonDoubleToFloatOption(x: OptBsonDouble) = x match {
+    case BsonNull => None
+    case BsonDouble(x) => Some(x.floatValue)
+  }
+  implicit def optBsonDoubleToDoubleOption(x: OptBsonDouble) = x match {
+    case BsonNull => None
+    case BsonDouble(x) => Some(x)
+  }
 }
 final case class BsonDouble(value: Double) extends OptBsonDouble
                                               with NumericBsonValue {
@@ -176,6 +216,10 @@ object OptBsonDate {
   implicit def optBsonDateToDate(x: OptBsonDate) = x match {
     case BsonNull => null
     case BsonDate(x) => x
+  }
+  implicit def optBsonDateToDateOption(x: OptBsonDate) = x match {
+    case BsonNull => None
+    case BsonDate(x) => Some(x)
   }
 }
 final case class BsonDate(value: Date) extends OptBsonDate
@@ -227,6 +271,10 @@ object OptBsonStr {
   implicit def optBsonStrToString(x: OptBsonStr) = x match {
     case BsonNull => null
     case BsonStr(x) => x
+  }
+  implicit def optBsonStrToStringOption(x: OptBsonStr) = x match {
+    case BsonNull => None
+    case BsonStr(x) => Some(x)
   }
 }
 trait BsonStr extends OptBsonStr with SimpleBsonValue {
@@ -354,27 +402,45 @@ object BsonValue {
   implicit def booleanToBsonBool(x: Boolean) = BsonBool(x)
   implicit def booleanToOptBsonBool(x: java.lang.Boolean) =
     if (x == null) BsonNull else BsonBool(x.booleanValue)
+  implicit def booleanOptionToOptBsonBool(x: Option[Boolean]) =
+    x.map(BsonBool(_)).getOrElse(BsonNull)
   implicit def byteToBsonInt(x: Byte) = BsonInt(x)
   implicit def byteToOptBsonInt(x: java.lang.Byte) =
     if (x == null) BsonNull else BsonInt(x.intValue)
+  implicit def byteOptionToOptBsonInt(x: Option[Byte]) =
+    x.map(BsonInt(_)).getOrElse(BsonNull)
   implicit def shortToBsonInt(x: Short) = BsonInt(x)
   implicit def shortToOptBsonInt(x: java.lang.Short) =
     if (x == null) BsonNull else BsonInt(x.intValue)
+  implicit def shortOptionToOptBsonInt(x: Option[Short]) =
+    x.map(BsonInt(_)).getOrElse(BsonNull)
   implicit def intToBsonInt(x: Int) = BsonInt(x)
   implicit def intToOptBsonInt(x: java.lang.Integer) =
     if (x == null) BsonNull else BsonInt(x.intValue)
+  implicit def intOptionToOptBsonInt(x: Option[Int]) =
+    x.map(BsonInt(_)).getOrElse(BsonNull)
   implicit def longToBsonLong(x: Long) = BsonLong(x)
   implicit def longToOptBsonLong(x: java.lang.Long) =
     if (x == null) BsonNull else BsonLong(x.longValue)
+  implicit def longOptionToOptBsonLong(x: Option[Long]) =
+    x.map(BsonLong(_)).getOrElse(BsonNull)
   implicit def floatToBsonDouble(x: Float) = BsonDouble(x)
   implicit def floatToOptBsonDouble(x: java.lang.Float) =
     if (x == null) BsonNull else BsonDouble(x.doubleValue)
+  implicit def floatOptionToOptBsonDouble(x: Option[Float]) =
+    x.map(BsonDouble(_)).getOrElse(BsonNull)
   implicit def doubleToBsonDouble(x: Double) = BsonDouble(x)
   implicit def doubleToOptBsonDouble(x: java.lang.Double) =
     if (x == null) BsonNull else BsonDouble(x.doubleValue)
+  implicit def doubleOptionToOptBsonDouble(x: Option[Double]) =
+    x.map(BsonDouble(_)).getOrElse(BsonNull)
   implicit def dateToOptBsonDate(x: Date) =
     if (x == null) BsonNull else BsonDate(x)
+  implicit def dateOptionToOptBsonDate(x: Option[Date]) =
+    x.map(BsonDate(_)).getOrElse(BsonNull)
   implicit def stringToOptBsonStr(x: String) =
     if (x == null) BsonNull else BsonStr(x)
+  implicit def stringOptionToOptBsonString(x: Option[String]) =
+    x.map(BsonStr(_)).getOrElse(BsonNull)
   implicit def nullToBsonNull(x: Null) = BsonNull
 }
