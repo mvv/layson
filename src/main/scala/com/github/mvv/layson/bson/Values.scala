@@ -279,6 +279,9 @@ final case class BsonRegex(regex: Regex) extends OptBsonRegex
   def size = 0
   def serialize = Iterator.empty
 }
+object BsonRegex {
+  val Any = BsonRegex(".*".r)
+}
 
 sealed trait OptBsonStr extends OptSimpleBsonValue
 object OptBsonStr {
