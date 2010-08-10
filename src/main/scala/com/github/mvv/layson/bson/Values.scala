@@ -17,6 +17,7 @@
 package com.github.mvv.layson.bson
 
 import java.util.Date
+import scala.util.matching.Regex
 
 sealed trait BsonValue extends NotNull {
   def code: Int
@@ -271,6 +272,14 @@ object BsonIdStr {
       None
 }
 
+sealed trait OptBsonRegex extends OptSimpleBsonValue
+final case class BsonRegex(regex: Regex) extends OptBsonRegex
+                                            with SimpleBsonValue {
+  def code = 0x0B
+  def size = 0
+  def serialize = Iterator.empty
+}
+
 sealed trait OptBsonStr extends OptSimpleBsonValue
 object OptBsonStr {
   implicit def optBsonStrToString(x: OptBsonStr) = x match {
@@ -444,6 +453,10 @@ object BsonValue {
     if (x == null) BsonNull else BsonDate(x)
   implicit def dateOptionToOptBsonDate(x: Option[Date]) =
     x.map(BsonDate(_)).getOrElse(BsonNull)
+  implicit def regexToOptBsonRegex(x: Regex) =
+    if (x == null) BsonNull else BsonRegex(x)
+  implicit def regexOptionToOptBsonRegex(x: Option[Regex]) =
+    x.map(BsonRegex(_)).getOrElse(BsonNull)
   implicit def stringToOptBsonStr(x: String) =
     if (x == null) BsonNull else BsonStr(x)
   implicit def stringOptionToOptBsonString(x: Option[String]) =
