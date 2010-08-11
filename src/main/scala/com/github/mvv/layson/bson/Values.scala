@@ -236,6 +236,7 @@ final case class BsonDate(value: Date) extends OptBsonDate
   def serialize = BsonLong(value.getTime).serialize
 }
 object BsonDate {
+  val Min = BsonDate(new Date(0))
   implicit def dateToBsonDate(x: Date) = BsonDate(x)
   implicit def bsonDateToDate(x: BsonDate) = x.value
 }
