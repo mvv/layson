@@ -403,6 +403,7 @@ object BsonNull extends OptBsonValue
                    with OptBsonDouble
                    with OptBsonDate
                    with OptBsonId
+                   with OptBsonRegex
                    with OptBsonStr
                    with OptBsonArray
                    with OptBsonObject {
