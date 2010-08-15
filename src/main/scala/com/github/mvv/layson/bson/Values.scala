@@ -242,6 +242,12 @@ object BsonDate {
 }
 
 sealed trait OptBsonId extends OptSimpleBsonValue
+object OptBsonId {
+  implicit def optBsonIdToBsonIdOption(x: OptBsonId) = x match {
+    case BsonNull => None
+    case x: BsonId => Some(x)
+  }
+}
 final case class BsonId(time: Int, machine: Int, increment: Int)
                    extends OptBsonId with SimpleBsonValue {
   def code = 0x07
@@ -396,6 +402,7 @@ object BsonNull extends OptBsonValue
                    with OptBsonLong
                    with OptBsonDouble
                    with OptBsonDate
+                   with OptBsonId
                    with OptBsonStr
                    with OptBsonArray
                    with OptBsonObject {
@@ -457,6 +464,8 @@ object BsonValue {
     if (x == null) BsonNull else BsonDate(x)
   implicit def dateOptionToOptBsonDate(x: Option[Date]) =
     x.map(BsonDate(_)).getOrElse(BsonNull)
+  implicit def bsonIdOptionToOptBsonId(x: Option[BsonId]) =
+    x.getOrElse(BsonNull)
   implicit def regexToOptBsonRegex(x: Regex) =
     if (x == null) BsonNull else BsonRegex(x)
   implicit def regexOptionToOptBsonRegex(x: Option[Regex]) =
