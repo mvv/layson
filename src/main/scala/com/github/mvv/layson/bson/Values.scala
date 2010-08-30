@@ -242,7 +242,16 @@ object BsonDate {
 }
 
 sealed trait OptBsonId extends OptSimpleBsonValue
-object OptBsonId {
+object OptBsonId extends Ordering[OptBsonId] {
+  def compare(x: OptBsonId, y: OptBsonId) = (x, y) match {
+    case (BsonNull, y) => if (y == BsonNull) 0 else -1
+    case (_, BsonNull) => 1
+    case (x: BsonId, y: BsonId) => BsonId.compare(x, y)
+  }
+
+  implicit def optBsonIdToOrdered(x: OptBsonId): Ordered[OptBsonId] =
+    Ordered.orderingToOrdered(x)(OptBsonId)
+
   implicit def optBsonIdToBsonIdOption(x: OptBsonId) = x match {
     case BsonNull => None
     case x: BsonId => Some(x)
@@ -260,8 +269,19 @@ final case class BsonId(time: Int, machine: Int, increment: Int)
                            java.lang.Integer.reverseBytes(machine),
                            java.lang.Integer.reverseBytes(increment))
 }
-object BsonId {
+object BsonId extends Ordering[BsonId] {
   val Zero = BsonId(0, 0, 0)
+
+  def compare(x: BsonId, y: BsonId) = (x.time compare y.time) match {
+    case 0 => (x.machine compare y.machine) match {
+      case 0 => x.increment compare y.increment
+      case c => c
+    }
+    case c => c
+  }
+
+  implicit def bsonIdToOrdered(x: BsonId): Ordered[BsonId] =
+    Ordered.orderingToOrdered(x)(BsonId)
 }
 object BsonIdStr {
   def unapply(str: String): Option[BsonId] =
