@@ -355,6 +355,7 @@ sealed trait OptBsonArray extends OptCompoundBsonValue
 trait BsonArray extends OptBsonArray with CompoundBsonValue {
   def iterator: Iterator[BsonValue]
   def elements: Seq[BsonValue]
+  final def isEmpty = iterator.isEmpty
   final def code = 0x04
   def size = 0
   final def serialize = Iterator.empty
@@ -381,6 +382,7 @@ trait BsonObject extends OptBsonObject with CompoundBsonValue {
   def members: Seq[(String, BsonValue)]
   def membersMap: Map[String, BsonValue]
   def get(key: String): Option[BsonValue]
+  final def isEmpty = iterator.isEmpty
   final def code = 0x03
   def size = 0
   final def serialize = Iterator.empty

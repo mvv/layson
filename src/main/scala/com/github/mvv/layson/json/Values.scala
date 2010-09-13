@@ -130,6 +130,7 @@ sealed trait OptJsonArray extends OptCompoundJsonValue {
 trait JsonArray extends OptJsonArray with CompoundJsonValue {
   def iterator: Iterator[JsonValue]
   def elements: Seq[JsonValue]
+  final def isEmpty = iterator.isEmpty
   final def serialize = {
     val it = iterator
     Iterator.single('[') ++
@@ -161,6 +162,7 @@ trait JsonObject extends OptJsonObject with CompoundJsonValue {
   def members: Seq[(String, JsonValue)]
   def membersMap: Map[String, JsonValue]
   def get(key: String): Option[JsonValue]
+  final def isEmpty = iterator.isEmpty
   final def serialize = {
     val it = iterator
     Iterator.single('{') ++
