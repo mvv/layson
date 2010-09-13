@@ -272,6 +272,10 @@ final case class BsonId(time: Int, machine: Int, increment: Int)
 object BsonId extends Ordering[BsonId] {
   val Zero = BsonId(0, 0, 0)
 
+  def apply(str: String): BsonId = BsonIdStr.unapply(str).getOrElse {
+    throw new IllegalArgumentException("Not a BSON id")
+  }
+
   def compare(x: BsonId, y: BsonId) = (x.time compare y.time) match {
     case 0 => (x.machine compare y.machine) match {
       case 0 => x.increment compare y.increment
