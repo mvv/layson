@@ -257,6 +257,7 @@ object OptBsonId extends Ordering[OptBsonId] {
     case x: BsonId => Some(x)
   }
 }
+@serializable
 final case class BsonId(time: Int, machine: Int, increment: Int)
                    extends OptBsonId with SimpleBsonValue {
   def code = 0x07
